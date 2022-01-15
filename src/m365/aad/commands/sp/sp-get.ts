@@ -5,7 +5,7 @@ import {
 import GlobalOptions from '../../../../GlobalOptions';
 import request from '../../../../request';
 import Utils from '../../../../Utils';
-import AadCommand from '../../../base/AadCommand';
+import GraphCommand from "../../../base/GraphCommand";
 import commands from '../../commands';
 
 interface CommandArgs {
@@ -18,7 +18,7 @@ export interface Options extends GlobalOptions {
   objectId?: string;
 }
 
-class AadSpGetCommand extends AadCommand {
+class AadSpGetCommand extends GraphCommand {
   public get name(): string {
     return commands.SP_GET;
   }
@@ -45,16 +45,16 @@ class AadSpGetCommand extends AadCommand {
       spMatchQuery = `appId eq '${encodeURIComponent(args.options.appId)}'`;
     }
     else if (args.options.objectId) {
-      spMatchQuery = `objectId eq '${encodeURIComponent(args.options.objectId)}'`;
+      spMatchQuery = `id eq '${encodeURIComponent(args.options.objectId)}'`;
     }
     else {
       spMatchQuery = `displayName eq '${encodeURIComponent(args.options.displayName as string)}'`;
     }
 
     const requestOptions: any = {
-      url: `${this.resource}/myorganization/servicePrincipals?api-version=1.6&$filter=${spMatchQuery}`,
+      url: `${this.resource}/v1.0/servicePrincipals?$filter=${spMatchQuery}`,
       headers: {
-        accept: 'application/json;odata=nometadata'
+        accept: 'application/json;odata.metadata=none'
       },
       responseType: 'json'
     };
